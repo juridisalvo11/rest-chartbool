@@ -3,3 +3,12 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+.graphics-box {
+  width: 500px;
+  margin: auto;
+}
+
+#grafico-mesi {
+  margin-top: 50px;
+}
