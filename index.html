@@ -8,9 +8,35 @@
     <script src="https://momentjs.com/downloads/moment.js" charset="utf-8"></script>
   </head>
   <body>
+    <div class="select">
+      <select class="venditori" name="">
+        <option value="Sellers">Sellers</option>
+        <option value="Marco">Marco</option>
+        <option value="Giuseppe">Giuseppe</option>
+        <option value="Riccardo">Riccardo</option>
+        <option value="Roberto">Roberto</option>
+      </select>
+      <select class="mesi" name="">
+        <option value="Months">Months</option>
+        <option value="January">January</option>
+        <option value="February">February</option>
+        <option value="March">March</option>
+        <option value="April">April</option>
+        <option value="May">May</option>
+        <option value="June">June</option>
+        <option value="July">July</option>
+        <option value="August">August</option>
+        <option value="September">September</option>
+        <option value="October">October</option>
+        <option value="November">November</option>
+        <option value="December">December</option>
+      </select>
+      <input class="input-sale" type="text" placeholder="Inserisci cifra...">
+      <button id="add-sale">Add Sale</button>
+    </div>
     <div class="graphics-box">
-      <canvas id="grafico-singole-vendite"></canvas>
       <canvas id="grafico-mesi"></canvas>
+      <canvas id="grafico-singole-vendite"></canvas>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js" charset="utf-8"></script>
