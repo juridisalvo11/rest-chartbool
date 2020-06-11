@@ -1,48 +1,57 @@
 $(document).ready(function() {
   //Effettuo chiamata Ajax per recuperare i dati
 
-  $.ajax({
-    url: 'http://157.230.17.132:4008/sales',
-    method: 'GET',
-    success: function(data) {
-
-      var dati_vendite = data;
-
-      //Richiamo la funzione per recuperare e gestire i dati delle vendite mensili
-      gestione_mensile(dati_vendite);
-      //Richiamo la funzione per recuperare e gestire i dati dei singoli venditori e delle singole vendite
-      singole_vendite(dati_vendite);
-
-    },
-    error: function() {
-      alert('Si è verificato un errore')
-    }
-  })
+  chiamata_ajax();
 
   $('#add-sale').on('click', function(){
-    var nuova_vendita = $('.input-sale').val();
-    console.log(new_sale);
-    var scelta_mese = $('.mesi').text();
+    var nuova_vendita = parseInt($('.input-sale').val());
+    console.log(nuova_vendita);
+    var scelta_mese = $('#mesi').val();
     console.log(scelta_mese);
-    var scelta_venditore = $('.venditori').text();
-    console.log(scelta_venditore);
-    // $.ajax({
-    //   url: 'http://157.230.17.132:4008/sales',
-    //   method: 'POST',
-    //   data: {
-    //     'salesman' :
-    //     'date' :
-    //     'amount' :
-    //   },
-    //   success: function(data) {
-    //
-    //   },
-    //   error: function() {
-    //     alert('Si è verificato un errore')
-    //   }
-    // })
+    var nuova_data = moment().format('DD/' + scelta_mese + '/2017')
+    console.log(nuova_data);
+    var scelta_venditore = $('#venditori').val();
+      console.log(scelta_venditore);
+
+    $.ajax({
+      url: 'http://157.230.17.132:4008/sales',
+      method: 'POST',
+      data: {
+        'salesman' : scelta_venditore,
+        'date' :  nuova_data,
+        'amount' : nuova_vendita,
+      },
+      success: function(data) {
+
+        chiamata_ajax()
+
+      },
+      error: function() {
+        alert('Si è verificato un errore')
+      }
+    })
 
   })
+
+  function chiamata_ajax() {
+    $.ajax({
+      url: 'http://157.230.17.132:4008/sales',
+      method: 'GET',
+      success: function(data) {
+
+        var dati_vendite = data;
+
+        //Richiamo la funzione per recuperare e gestire i dati delle vendite mensili
+        gestione_mensile(dati_vendite);
+        //Richiamo la funzione per recuperare e gestire i dati dei singoli venditori e delle singole vendite
+        singole_vendite(dati_vendite);
+
+      },
+      error: function() {
+        alert('Si è verificato un errore')
+      }
+    })
+  }
 
   //FUNZIONE PER GESTIRE LE VENDITE MENSILI
   function gestione_mensile(mese) {
@@ -69,15 +78,15 @@ $(document).ready(function() {
 
       var data_vendite = moment(dati_correnti.date, 'DD,MM,YYYY').format('MMMM');
 
-      var ammontare_vendite = dati_correnti.amount;
+      var ammontare_vendite = parseInt(dati_correnti.amount);
 
       vendite_mensili[data_vendite] += ammontare_vendite;
 
-      // if(!vendite_mensili.hasOwnProperty(data_vendite)) {
-      //   vendite_mensili[data_vendite] = ammontare_vendite;
-      // } else {
-      //   vendite_mensili[data_vendite] += ammontare_vendite;
-      // }
+      if(!vendite_mensili.hasOwnProperty(data_vendite)) {
+        vendite_mensili[data_vendite] = ammontare_vendite;
+      } else {
+        vendite_mensili[data_vendite] += ammontare_vendite;
+      }
     }
 
     var mesi = Object.keys(vendite_mensili);
@@ -128,7 +137,7 @@ $(document).ready(function() {
     for (var i = 0; i < vendite.length; i++) {
       var dati_vendite = vendite[i]
       console.log(dati_vendite);
-      var cifra_vendita = dati_vendite.amount;
+      var cifra_vendita = parseInt(dati_vendite.amount);
       //console.log(cifra_vendita);
       var venditori = dati_vendite.salesman;
       //console.log(venditori);
