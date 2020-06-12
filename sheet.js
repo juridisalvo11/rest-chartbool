@@ -3,33 +3,42 @@ $(document).ready(function() {
 
   chiamata_ajax();
 
-  $('#add-sale').on('click', function(){
-    var nuova_vendita = parseInt($('.input-sale').val());
+  $('#add-sale').click(function(){
+    var nuova_vendita = $('.input-sale').val();
     console.log(nuova_vendita);
     var scelta_mese = $('#mesi').val();
     console.log(scelta_mese);
-    var nuova_data = moment().format('DD/' + scelta_mese + '/2017')
-    console.log(nuova_data);
     var scelta_venditore = $('#venditori').val();
       console.log(scelta_venditore);
 
-    $.ajax({
-      url: 'http://157.230.17.132:4008/sales',
-      method: 'POST',
-      data: {
-        'salesman' : scelta_venditore,
-        'date' :  nuova_data,
-        'amount' : nuova_vendita,
-      },
-      success: function(data) {
+    if (scelta_venditore != '' && scelta_mese != '' && nuova_vendita > 0 ) {
+      var nuova_data = moment().format('DD/' + scelta_mese + '/2017')
+        console.log(nuova_data);
 
-        chiamata_ajax()
+      $.ajax({
+        url: 'http://157.230.17.132:4008/sales',
+        method: 'POST',
+        data: {
+          'salesman' : scelta_venditore,
+          'date' :  nuova_data,
+          'amount' : nuova_vendita,
+        },
+        success: function(data) {
 
-      },
-      error: function() {
-        alert('Si è verificato un errore')
-      }
-    })
+          chiamata_ajax()
+
+        },
+        error: function() {
+          alert('Si è verificato un errore')
+        }
+      })
+    } else if (scelta_venditore == '') {
+      alert('Inserisci un venditore valido');
+    } else if (scelta_mese == '') {
+      alert('Inserisci un mese valido');
+    } else {
+      alert('Inserisci un importo valido');
+    }
 
   })
 
@@ -97,8 +106,11 @@ $(document).ready(function() {
   }
 
   function grafico_mensile(chiavi, valori) {
-    var ctx = $('#grafico-mesi')[0].getContext('2d');
-    var myChart = new Chart(ctx, {
+
+    $('#box-vendite-mesi').empty();
+    $('#box-vendite-mesi').append('<canvas id="grafico-mesi"></canvas>');
+
+    var myChart = new Chart($('#grafico-mesi')[0].getContext('2d'), {
         type: 'line',
         data: {
             labels: chiavi,
@@ -175,9 +187,11 @@ $(document).ready(function() {
 
   // FUNZIONE PER CREARE IL GRAFICO DEI VENDITORI
   function grafico_venditori(chiavi, valori) {
-    var ctx = $('#grafico-singole-vendite')[0].getContext('2d');
 
-    var myChart = new Chart(ctx, {
+    $('#box-vendite-singole').empty();
+    $('#box-vendite-singole').append('<canvas id="grafico-singole-vendite"></canvas>');
+
+    var myChart = new Chart($('#grafico-singole-vendite')[0].getContext('2d'), {
         type: 'pie',
         data: {
             labels: chiavi,
