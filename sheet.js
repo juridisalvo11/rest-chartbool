@@ -67,20 +67,12 @@ $(document).ready(function() {
     //  //Creo l'oggetto vendite_mensili dove andare ad inserire i dati recuperati delle vendite mese per mese
     //var vendite_mensili = {};
 
-    var vendite_mensili = {
-      'January': 0,
-      'February': 0,
-      'March': 0,
-      'April': 0,
-      'May': 0,
-      'June': 0,
-      'July': 0,
-      'August': 0,
-      'September': 0,
-      'October': 0,
-      'November': 0,
-      'December': 0
-    };
+    var vendite_mensili = {};
+
+    for (var i = 1; i < 12; i++) {
+      var nome_mese = moment(i, 'M').format('MMMM');
+      vendite_mensili[nome_mese] = 0;
+      }
 
     for (var i = 0; i < mese.length; i++) {
       var dati_correnti = mese[i];
@@ -98,9 +90,13 @@ $(document).ready(function() {
       }
     }
 
+    console.log('vendite mensili', vendite_mensili);
+
     var mesi = Object.keys(vendite_mensili);
 
     var vendita_corrente = Object.values(vendite_mensili);
+
+    scrivi_mese(mesi)
 
     grafico_mensile(mesi, vendita_corrente);
   }
@@ -145,10 +141,11 @@ $(document).ready(function() {
     var totale_vendite = {};
 
     var somma_totale_vendite = 0;
+
     //Imposto un ciclo for per andare a prendere i dati relativi ai singoli venditori
     for (var i = 0; i < vendite.length; i++) {
       var dati_vendite = vendite[i]
-      console.log(dati_vendite);
+      //console.log(dati_vendite);
       var cifra_vendita = parseInt(dati_vendite.amount);
       //console.log(cifra_vendita);
       var venditori = dati_vendite.salesman;
@@ -164,20 +161,19 @@ $(document).ready(function() {
       }
       //console.log(totale_vendite);
       somma_totale_vendite += cifra_vendita;
-
-      // for (var vendita in totale_vendite) {
-      //   var importo_venditore = totale_vendite[vendita];
-      //   var percentuale = (importo_vendita * 100 / somma_totale_vendite).toFixed(1);
-      // }
-      // console.log(somma_totale_vendite);
     }
 
-    //console.log(somma_totale_vendite);
+    for (var vendita in totale_vendite) {
+      var importo_venditore = totale_vendite[vendita];
+      var percentuale = (importo_venditore * 100 / somma_totale_vendite).toFixed(1);
+      totale_vendite[vendita] = percentuale;
+    }
 
     //Recupero le chiavi dell'oggetto
     var keys = Object.keys(totale_vendite);
     //Recupero il valore delle chiavi dell'oggetto
     var values = Object.values(totale_vendite);
+    scrivi_venditore(keys);
 
     //Richiamo il grafico per andare ad inserire i dati
     grafico_venditori(keys, values);
@@ -214,14 +210,37 @@ $(document).ready(function() {
             }]
         },
         options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
+          tooltips: {
+            callbacks: {
+                label: function(tooltipItem, data) {
+                  var percentuale_venditore = data.labels[tooltipItem.index];
+                  var percentuale_vendite = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+
+                  return percentuale_venditore + ':' + percentuale_vendite + '%';
+                }
+              }
             }
         }
     });
+  }
+
+  function scrivi_mese(mesi_options) {
+    $('#mesi').empty();
+    $('#mesi').append('<option value""> Months </option>');
+    for (var i = 0; i < mesi_options.length; i++) {
+      var numero_mese = i + 1;
+      if (numero_mese < 10) {
+        numero_mese = '0' + numero_mese
+      }
+      var mesi_select = $('#mesi').append('<option value="' + numero_mese + '">' + mesi_options[i] + '</options>')
+    }
+  }
+
+  function scrivi_venditore(venditori_options) {
+    $('#venditori').empty();
+    $('#venditori').append('<option value""> Sellers </option>');
+    for (var i = 0; i < venditori_options.length; i++) {
+      var mesi_select = $('#venditori').append('<option value="' + venditori_options[i] + '">' + venditori_options[i] + '</options>')
+    }
   }
 })
