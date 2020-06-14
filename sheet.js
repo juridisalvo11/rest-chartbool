@@ -5,15 +5,15 @@ $(document).ready(function() {
 
   $('#add-sale').click(function(){
     var nuova_vendita = $('.input-sale').val();
-    console.log(nuova_vendita);
+    //console.log(nuova_vendita);
     var scelta_mese = $('#mesi').val();
-    console.log(scelta_mese);
+    //console.log(scelta_mese);
     var scelta_venditore = $('#venditori').val();
-      console.log(scelta_venditore);
+      //console.log(scelta_venditore);
 
     if (scelta_venditore != '' && scelta_mese != '' && nuova_vendita > 0 ) {
       var nuova_data = moment().format('DD/' + scelta_mese + '/2017')
-        console.log(nuova_data);
+        //console.log(nuova_data);
 
       $.ajax({
         url: 'http://157.230.17.132:4008/sales',
@@ -90,7 +90,7 @@ $(document).ready(function() {
       }
     }
 
-    console.log('vendite mensili', vendite_mensili);
+    //console.log('vendite mensili', vendite_mensili);
 
     var mesi = Object.keys(vendite_mensili);
 
